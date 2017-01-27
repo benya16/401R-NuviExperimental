@@ -1,4 +1,4 @@
-package main
+package distributor
 
 import (
 	"io/ioutil"
@@ -34,17 +34,11 @@ func toJson(p interface{}) string {
 	return string(bytes)
 }
 
-func main() {
-
-	posts := getPosts()
-	for _, p := range posts {
-		fmt.Println(p.toString())
-	}
-
-	fmt.Println(toJson(posts))
+type Distributor struct {
+	Posts []Post
 }
 
-func getPosts() []Post {
+func getPosts(d Distributor)  {
 	raw, err := ioutil.ReadFile("data/normalized-payloads.json")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -53,5 +47,5 @@ func getPosts() []Post {
 
 	var c []Post
 	json.Unmarshal(raw, &c)
-	return c
+	d.Posts = c
 }
