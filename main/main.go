@@ -7,7 +7,11 @@ import (
 
 func main() {
 
-	var dist = distributor.Distributor{}
-	fmt.Fprintln(dist)
+	Dist := new(distributor.Distributor)
+	Dist.GetPosts()
+
+	for _,Post := range Dist.Posts {
+		fmt.Println(Post.ToString())
+	}
 
 }

@@ -20,7 +20,7 @@ type Post struct {
 	Longitude	float64   `json:"longitude"`
 }
 
-func (p Post) toString() string {
+func (p Post) ToString() string {
 	return toJson(p)
 }
 
@@ -38,7 +38,7 @@ type Distributor struct {
 	Posts []Post
 }
 
-func getPosts(d Distributor)  {
+func (d *Distributor) GetPosts() {
 	raw, err := ioutil.ReadFile("data/normalized-payloads.json")
 	if err != nil {
 		fmt.Println(err.Error())
