@@ -39,7 +39,7 @@ type Distributor struct {
 }
 
 func (d *Distributor) GetPosts() {
-	raw, err := ioutil.ReadFile("data/normalized-payloads.json")
+	raw, err := ioutil.ReadFile("output.json")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
