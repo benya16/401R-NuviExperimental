@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -91,13 +90,9 @@ func main() {
 
 	var posts []Post
 
-	fmt.Println(DangerDictionary)
-	word := DangerDictionary[rand.Intn(len(DangerDictionary))]
-	fmt.Println(word)
-
 	for i := 0; i < NumToGenerate; i++ {
 		post := new(Post)
-		if float64(i) >= float64(NumToGenerate) * PercentDangerous {
+		if float64(i) < float64(NumToGenerate) * PercentDangerous {
 			post.Raw_body_text = getDangerSentence()
 		} else {
 			post.Raw_body_text = getSafeSentence()
