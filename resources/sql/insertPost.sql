@@ -1,0 +1,1 @@
+INSERT INTO post (GEO_HASH, POST) VALUES ($1, $2);
