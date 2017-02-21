@@ -1,11 +1,11 @@
 package main
 
 import (
-	"../Database"
+	"../pgdatabase"
 )
 
 func main() {
-	//Database.CreateTables()
-	dao := Database.NewDAO()
+	//pgdatabase.CreateTables()
+	dao := pgdatabase.NewDAO()
 	dao.AddPost("this is a test post")
 }

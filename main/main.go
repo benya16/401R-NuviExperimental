@@ -2,9 +2,11 @@ package main
 
 import (
 	"../Distributor"
+	"../pgdatabase"
 	"fmt"
 	"../filter"
 	"os"
+	//"time"
 	"time"
 )
 
@@ -13,6 +15,8 @@ func main() {
 	Dist := new(distributor.Distributor)
 	Dist.GetPosts()
 
+	db := pgdatabase.NewDAO()
+
 	filter := new(filter.Filter)
 	filter.InitFilter(os.Args[1])
 	hit, miss := 0, 0
@@ -20,19 +24,19 @@ func main() {
 	start := time.Now()
 	var elapsed time.Duration
 	for _,Post := range Dist.Posts {
-		elapsed = time.Since(start)
 		//fmt.Println(Post.ToString())
 		if filter.ContainsDangerWord(Post.RawText) {
+			db.AddPost(Post.RawText)
 			hit++
 		} else {
 			miss++
 		}
-		if elapsed > time.Second {
-			break
-		}
+		//if elapsed > time.Second {
+		//	break
+		//}
 	}
 
-
+	elapsed = time.Since(start)
 	fmt.Println("Total: ", hit + miss)
 	fmt.Println("True: ", hit)
 	fmt.Println("False: ", miss)

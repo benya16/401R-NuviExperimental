@@ -1,11 +1,8 @@
-package Database
-
-import "fmt"
+package pgdatabase
 
 func CreateTables() {
 	conn := new(Connection)
 	createStatement := readSQLFile("resources/sql/createTables.sql")
-	fmt.Println(createStatement)
 	conn.Connect()
 	conn.Execute(createStatement)
 	conn.Close()

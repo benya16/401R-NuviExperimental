@@ -1,4 +1,4 @@
-package Database
+package pgdatabase
 
 import (
 	"database/sql"
@@ -11,20 +11,20 @@ type Connection struct {
 
 func (c *Connection) Connect() {
 	db, err := sql.Open("postgres", "postgres://go:gogo2017@localhost/nuvisocialthreat?sslmode=disable")
-	sqlError(err)
+	sqlError(err, "Error at Connect()")
 	c.database = db
 }
 
 func (c *Connection) Query(sqlStatement string) *sql.Rows{
 	rows, err := c.database.Query(sqlStatement)
-	sqlError(err)
+	sqlError(err, "Error at Query()")
 
 	return rows
 }
 
 func (c *Connection) Execute(sqlStatement string){
 	_, err := c.database.Exec(sqlStatement)
-	sqlError(err)
+	sqlError(err, "Error at Execute")
 }
 
 func (c *Connection) Close() {
@@ -33,7 +33,7 @@ func (c *Connection) Close() {
 
 func (c *Connection) Prepare(query string) *sql.Stmt {
 	result, err := c.database.Prepare(query)
-	sqlError(err)
+	sqlError(err, "Error at Prepare()")
 
 	return result
 }

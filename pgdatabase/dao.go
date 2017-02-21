@@ -1,4 +1,4 @@
-package Database
+package pgdatabase
 
 type DAO struct {
 	connection *Connection
