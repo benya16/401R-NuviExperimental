@@ -1,5 +1,7 @@
 package pgdatabase
 
+import "database/sql"
+
 type DAO struct {
 	connection *Connection
 }
@@ -11,10 +13,36 @@ func NewDAO() *DAO {
 	return dao
 }
 
-func (d *DAO) AddPost(post string) {
-	d.connection.Connect()
-	stmt := d.connection.Prepare(readSQLFile("resources/sql/insertPost.sql"))
+func (this *DAO) AddPost(post string) {
+	var transaction bool = false
+	if this.connection.IsConnected() {
+		transaction = true
+	}
+	if !transaction {
+		this.connection.Connect()
+	}
+	stmt := this.connection.Prepare(readSQLFile("resources/sql/insertPost.sql"))
 	stmt.Exec("geohash", []byte(post))
-	d.connection.Close()
+	if !transaction {
+		this.connection.Close()
+	}
 }
 
+func (this *DAO) GetGeoHash(geohash string) *sql.Rows{
+	var transaction bool
+	if this.connection.IsConnected() {
+		transaction = true
+	}
+	if !transaction {
+		this.connection.Connect()
+	}
+	stmt := this.connection.Prepare(readSQLFile("resources/sql/getGeoHash.sql"))
+	result, err := stmt.Query(geohash)
+	sqlError(err, "Error in GetGeoHash")
+
+	return result
+}
+
+func (this *DAO) Test() {
+	this.connection.Test()
+}
