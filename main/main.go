@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"../filter"
 	"os"
-	//"time"
 	"time"
 )
 

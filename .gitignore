@@ -1,2 +1,4 @@
 .idea
 output.json
+config/config.toml
+configTest.go
