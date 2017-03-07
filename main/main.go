@@ -8,11 +8,12 @@ import (
 	"os"
 	//"time"
 	"time"
+	"encoding/json"
 )
 
 func main() {
 
-	Dist := new(distributor.Distributor)
+	Dist := new(Distributor.Distributor)
 	Dist.GetPosts()
 
 	db := pgdatabase.NewDAO()
@@ -24,13 +25,16 @@ func main() {
 	start := time.Now()
 	var elapsed time.Duration
 	for _,Post := range Dist.Posts {
+		data, _ := json.Marshal(Post)
+		db.AddPost(data)
 		//fmt.Println(Post.ToString())
-		if filter.ContainsDangerWord(Post.RawText) {
-			db.AddPost(Post.RawText)
-			hit++
-		} else {
-			miss++
-		}
+		//if filter.ContainsDangerWord(Post.RawText) {
+		//	data, _ := json.Marshal(Post)
+		//	db.AddPost(data)
+		//	hit++
+		//} else {
+		//	miss++
+		//}
 		//if elapsed > time.Second {
 		//	break
 		//}

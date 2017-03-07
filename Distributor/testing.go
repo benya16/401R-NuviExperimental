@@ -21,17 +21,6 @@ func main() {
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
-	err = ch.ExchangeDeclare(
-		"logs",   // name
-		"fanout", // type
-		true,     // durable
-		false,    // auto-deleted
-		false,    // internal
-		false,    // no-wait
-		nil,      // arguments
-	)
-	failOnError(err, "Failed to declare an exchange")
-
 	q, err := ch.QueueDeclare(
 		"",    // name
 		false, // durable
@@ -44,8 +33,8 @@ func main() {
 
 	err = ch.QueueBind(
 		q.Name, // queue name
-		"",     // routing key
-		"logs", // exchange
+		"social_activity_parser.twitter_activity.created",     // routing key
+		"events", // exchange
 		false,
 		nil)
 	failOnError(err, "Failed to bind a queue")
