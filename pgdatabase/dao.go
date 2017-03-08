@@ -13,7 +13,7 @@ func NewDAO() *DAO {
 	return dao
 }
 
-func (this *DAO) AddPost(post string) {
+func (this *DAO) AddPost(post []byte) {
 	var transaction bool = false
 	if this.connection.IsConnected() {
 		transaction = true
@@ -22,7 +22,7 @@ func (this *DAO) AddPost(post string) {
 		this.connection.Connect()
 	}
 	stmt := this.connection.Prepare(readSQLFile("resources/sql/insertPost.sql"))
-	stmt.Exec("geohash", []byte(post))
+	stmt.Exec(post)
 	if !transaction {
 		this.connection.Close()
 	}

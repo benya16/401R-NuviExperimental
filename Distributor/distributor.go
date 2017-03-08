@@ -1,4 +1,4 @@
-package distributor
+package Distributor
 
 import (
 	"io/ioutil"
