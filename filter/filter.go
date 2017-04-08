@@ -3,82 +3,74 @@ package filter
 import (
 	"io/ioutil"
 	"strings"
-	"regexp"
-	"../models"
-	"fmt"
+	//"regexp"
 )
 
 var dangerDictionary []string
-var regex *regexp.Regexp
-var exceptionRegex *regexp.Regexp
 
-type Filter struct {
-	exceptionFilter bool
-}
+
+
+//var regex *regexp.Regexp
+
+var trie *Trie
+
+type Filter struct {}
+
+
+
 
 func (d* Filter) InitFilter(dictionaryFileName string) {
-	d.exceptionFilter = false
+
+
+	trie = NewTrie()
+
+
 	data, _ := ioutil.ReadFile(dictionaryFileName)
-	rows := strings.Split(string(data), ",")
-	for _, row := range rows {
-		entries := strings.Split(row, ",")
-		for _, entry := range entries {
-			if entry != "" {
-				dangerDictionary = append(dangerDictionary, entry)
-			}
-		}
+	dangerDictionary = strings.Fields(string(data))
+
+
+
+	for i := 0; i < len(dangerDictionary); i++ {
+		trie.AddWordWIthDerivation(dangerDictionary[i], false)
 	}
+
+
+/*
 	regexString := "(?i)"
 	for i := 0; i < len(dangerDictionary); i++ {
 		if i > 0 {
-			regexString += "|\\s+#?"
+			regexString += "|"
 		}
-		regexString += strings.TrimSpace(dangerDictionary[i]) + "\\s+"
+		regexString += dangerDictionary[i]
 	}
-	//fmt.Println(dangerDictionary)
-	//fmt.Println(regexString)
 	regex = regexp.MustCompile(regexString)
+	*/
 }
 
-func (d* Filter) SetExceptionsFilter(dictionaryFileName string) {
-	d.exceptionFilter = true
-	var exceptionDictionary []string
+
+
+func (d* Filter) InitExceptions(dictionaryFileName string) {
+
 	data, _ := ioutil.ReadFile(dictionaryFileName)
-	rows := strings.Fields(string(data))
-	for _, row := range rows {
-		entries := strings.Split(row, ",")
-		for _, entry := range entries {
-			if entry != "" {
-				exceptionDictionary = append(exceptionDictionary, entry)
-			}
-		}
+	dangerDictionary = strings.Fields(string(data))
+
+
+	for i := 0; i < len(dangerDictionary); i++ {
+		trie.AddWordWIthDerivation(dangerDictionary[i], true)
 	}
-	//exceptionDictionary := strings.Split(string(data), ",")
-	regexString := "(?i)"
-	//fmt.Println(exceptionDictionary)
-	for i := 0; i < len(exceptionDictionary); i++ {
-		if i > 0 {
-			regexString += "|\\s+"
-		}
-		regexString += strings.TrimSpace(exceptionDictionary[i]) + "\\s+"
-	}
-	//fmt.Println(regexString)
-	exceptionRegex = regexp.MustCompile(regexString)
 }
 
-func (d* Filter) ContainsDangerWord(post models.Post) bool {
-	if post.Language == "en" {
-		slice := regex.FindAllString(post.Raw_body_text, -1)
-		if len(slice) > 0 {
-			fmt.Print("Matched on: ")
-			fmt.Println(slice)
-			if d.exceptionFilter {
-				return !exceptionRegex.Match([]byte(post.Raw_body_text))
-			} else {
-				return true
-			}
-		}
-	}
 
-	return false
+
+
+func (d* Filter) ContainsDangerWord(bodyText string) bool {
+
+
+	returnVar := trie.isDangerousSentance(bodyText)
+	if(returnVar.size == 0) {
+		return false
+	}
+	return true
+
+
 }
