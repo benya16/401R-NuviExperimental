@@ -258,7 +258,7 @@ func findNumericRuneLink(links []NumericLink, value rune) (*TrieNumeric, bool) {
 }
 
 
-//PUT IN SINGLE, SANITIZED WORDS (no punctuation or spaces)
+//PUT IN SINGLE, SANITIZED WORDS (no punctuation or spaces) still in progress
 func (r *TrieNumeric) addWord(s string) int {
 	//the problem with this is that we need to handle imperfect words, EG
 	//with punctuation, spaces, and so forth
@@ -281,6 +281,10 @@ func (r *TrieNumeric) addWord(s string) int {
 }
 
 
+
+func NewNumericTrie() *TrieNumeric {
+	return &TrieNumeric{childNodes: make([]NumericLink, 0)}
+}
 
 
 
