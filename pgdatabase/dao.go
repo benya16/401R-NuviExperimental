@@ -1,6 +1,9 @@
 package pgdatabase
 
-import "database/sql"
+import (
+	"database/sql"
+	"../models"
+)
 
 type DAO struct {
 	connection *Connection
@@ -13,19 +16,29 @@ func NewDAO() *DAO {
 	return dao
 }
 
-func (this *DAO) AddPost(post []byte) {
-	var transaction bool = false
-	if this.connection.IsConnected() {
-		transaction = true
-	}
-	if !transaction {
-		this.connection.Connect()
-	}
-	stmt := this.connection.Prepare(readSQLFile("resources/sql/insertPost.sql"))
+func (this *DAO) AddRawPost(post []byte) {
+	//var transaction bool = false
+	//if this.connection.IsConnected() {
+	//	transaction = true
+	//}
+	//if !transaction {
+	//	this.connection.Connect()
+	//}
+	this.connection.Connect()
+	stmt := this.connection.Prepare(readSQLFile("resources/sql/insertRawPost.sql"))
 	stmt.Exec(post)
-	if !transaction {
-		this.connection.Close()
-	}
+	this.connection.Close()
+	//if !transaction {
+	//	this.connection.Close()
+	//}
+}
+
+func (this *DAO) AddProcessedPost(post *models.ProcessedPost) {
+	this.connection.Connect()
+	stmt := this.connection.Prepare(readSQLFile("resources/sql/insertProcessedPost.sql"))
+	_, err := stmt.Exec(post.PostLength, post.LikeCount, post.FollowersCount, post.FriendCount, post.HashtagCount, post.RetweetCount, post.IsRetweet, post.KloutScore, post.ExclaimationCount)
+	sqlError(err, "Error in AddProcessedPost")
+	this.connection.Close()
 }
 
 func (this *DAO) GetGeoHash(geohash string) *sql.Rows{

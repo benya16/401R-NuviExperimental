@@ -8,6 +8,7 @@ import (
 	"../pgdatabase"
 	"../models"
 	"encoding/json"
+	"crypto/rand"
 )
 
 func failOnError(err error, msg string) {
@@ -36,27 +37,9 @@ func StartRabbit() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	instagram_q, err := ch.QueueDeclare(
-		"byustudents-josh-instagram",    // name
-		false, // durable
-		false, // delete when usused
-		true,  // exclusive
-		false, // no-wait
-		nil,   // arguments
-	)
-	failOnError(err, "Failed to declare a queue")
-
 	err = ch.QueueBind(
 		twitter_q.Name, // queue name
 		"social_activity_parser.twitter_activity.created",     // routing key
-		"events", // exchange
-		false,
-		nil)
-	failOnError(err, "Failed to bind a queue")
-
-	err = ch.QueueBind(
-		instagram_q.Name, // queue name
-		"social_activity_parser.instagram_activity.created",     // routing key
 		"events", // exchange
 		false,
 		nil)
@@ -73,46 +56,36 @@ func StartRabbit() {
 	)
 	failOnError(err, "Failed to register a consumer")
 
-	instagram_msgs, err := ch.Consume(
-		instagram_q.Name, // queue
-		"",     // consumer
-		false,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
-	)
-	failOnError(err, "Failed to register a consumer")
-
 	db := pgdatabase.NewDAO()
 	twitterFilter := new(filter.Filter)
 	instragramFilter := new(filter.Filter)
 	twitterFilter.InitFilter("danger.csv")
 	instragramFilter.InitFilter("danger.csv")
-	twitterFilter.SetExceptionsFilter("exceptions.csv")
-	instragramFilter.SetExceptionsFilter("exceptions.csv")
+	//twitterFilter.SetExceptionsFilter("exceptions.csv")
+	//instragramFilter.SetExceptionsFilter("exceptions.csv")
 	forever := make(chan bool)
 
 	go func() {
 		for d := range twitter_msgs {
 			var post models.Post
 			json.Unmarshal(d.Body, &post)
-			if twitterFilter.ContainsDangerWord(post) {
-				db.AddPost(d.Body)
-			}
-		}
-	}()
-
-	go func() {
-		for d := range instagram_msgs {
-			var post models.Post
-			json.Unmarshal(d.Body, &post)
-			if instragramFilter.ContainsDangerWord(post) {
-				db.AddPost(d.Body)
+			if twitterFilter.ContainsDangerWord(post.Raw_body_text) {
+				db.AddRawPost(d.Body)
+				processed := filter.Preprocess(&post)
+				//fmt.Println(processed)
+				db.AddProcessedPost(processed)
+				fmt.Println("Threat Logged")
 			}
 		}
 	}()
 
 	log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
 	<-forever
+}
+
+func generateUUID() string {
+	bytes := make([]byte, 32)
+	rand.Read(bytes)
+
+	return string(bytes)
 }

@@ -58,3 +58,15 @@ type Post struct {
 	Source string
 	Topic_monitor_id string
 }
+
+type ProcessedPost struct {
+	PostLength        uint
+	LikeCount         uint
+	FollowersCount    uint
+	FriendCount       uint
+	HashtagCount      uint
+	RetweetCount      uint
+	IsRetweet         bool
+	KloutScore        uint
+	ExclaimationCount uint
+}
