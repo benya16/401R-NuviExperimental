@@ -12,7 +12,7 @@ var dangerDictionary []string
 
 //var regex *regexp.Regexp
 
-var trie *Trie
+var Dictionary *Trie
 
 type Filter struct {}
 
@@ -22,7 +22,7 @@ type Filter struct {}
 func (d* Filter) InitFilter(dictionaryFileName string) {
 
 
-	trie = NewTrie()
+	Dictionary = NewTrie()
 
 
 	data, _ := ioutil.ReadFile(dictionaryFileName)
@@ -31,7 +31,7 @@ func (d* Filter) InitFilter(dictionaryFileName string) {
 
 
 	for i := 0; i < len(dangerDictionary); i++ {
-		trie.AddWordWIthDerivation(dangerDictionary[i], false)
+		Dictionary.AddWordWIthDerivation(dangerDictionary[i], false)
 	}
 
 
@@ -56,7 +56,7 @@ func (d* Filter) InitExceptions(dictionaryFileName string) {
 
 
 	for i := 0; i < len(dangerDictionary); i++ {
-		trie.AddWordWIthDerivation(dangerDictionary[i], true)
+		Dictionary.AddWordWIthDerivation(dangerDictionary[i], true)
 	}
 }
 
@@ -66,7 +66,7 @@ func (d* Filter) InitExceptions(dictionaryFileName string) {
 func (d* Filter) ContainsDangerWord(bodyText string) bool {
 
 
-	returnVar := trie.isDangerousSentance(bodyText)
+	returnVar := Dictionary.isDangerousSentance(bodyText)
 	if(returnVar.size == 0) {
 		return false
 	}

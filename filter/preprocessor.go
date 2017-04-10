@@ -21,5 +21,26 @@ func Preprocess(post *models.Post) *models.ProcessedPost {
 	}
 	processed.ExclaimationCount = uint(exclamationCount)
 
+	//take the raw body text, run it through the filter
+
+	dangerWords := Dictionary.isDangerousSentance(post.Cleaned_body_text)
+
+	processed.Shooter = dangerWords.Contains("shooter")
+	processed.ActiveShooter = dangerWords.Contains("active shooter")
+	processed.Attack = dangerWords.Contains("attack")
+	processed.Bomb = dangerWords.Contains("bomb")
+	processed.BombThreat = dangerWords.Contains("bomb threat")
+	processed.Breaking = dangerWords.Contains("breaking")
+	processed.Danger = dangerWords.Contains("danger")
+	processed.Dead = dangerWords.Contains("dead")
+	processed.Gunman = dangerWords.Contains("gunman")
+	processed.Killing = dangerWords.Contains("killing")
+	processed.Rape = dangerWords.Contains("rape")
+	processed.Shooting = dangerWords.Contains("shooting")
+	processed.Stabbing = dangerWords.Contains("stabbing")
+	processed.Terrorist = dangerWords.Contains("terrorist")
+	processed.Warning = dangerWords.Contains("warning")
+
+
 	return processed
 }

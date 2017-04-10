@@ -1,5 +1,7 @@
 package filter
 
+import "strings"
+
 type Link struct {
 	value rune
 	link *Trie
@@ -94,6 +96,19 @@ func (words *WordSet) Get(i int) string {
 	return words.set[i]
 }
 
+func (words *WordSet) Contains(s string) bool {
+	s = strings.ToLower(s)
+
+	for i := 0; i < words.size; i++ {
+		if words.Get(i) == s {
+			return true
+		}
+	}
+	return false
+}
+
+
+
 
 
 
@@ -183,6 +198,8 @@ func (r *Trie) isDangerous(s string) bool  {
 
 //takes a whole sentance.
 func (r *Trie) isDangerousSentance(sentance string) WordSet {
+
+	sentance = strings.ToLower(sentance)
 
 	var s = sentance + " "
 
