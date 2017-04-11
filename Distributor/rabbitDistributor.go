@@ -58,11 +58,7 @@ func StartRabbit() {
 
 	db := pgdatabase.NewDAO()
 	twitterFilter := new(filter.Filter)
-	instragramFilter := new(filter.Filter)
 	twitterFilter.InitFilter("danger.csv")
-	instragramFilter.InitFilter("danger.csv")
-	//twitterFilter.SetExceptionsFilter("exceptions.csv")
-	//instragramFilter.SetExceptionsFilter("exceptions.csv")
 	forever := make(chan bool)
 
 	go func() {
@@ -72,11 +68,14 @@ func StartRabbit() {
 			if twitterFilter.ContainsDangerWord(post.Raw_body_text) {
 				id := generateUUID()
 				db.AddRawPost(id, d.Body)
-				processed := filter.Preprocess(&post)
+				processed := twitterFilter.Preprocess(&post)
 				//fmt.Println(processed)
 				db.AddProcessedPost(id, processed)
 				fmt.Println("Threat Logged")
+			} else {
+				fmt.Print("*")
 			}
+
 		}
 	}()
 
