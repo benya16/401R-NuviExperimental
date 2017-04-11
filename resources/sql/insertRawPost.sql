@@ -1,1 +1,1 @@
-INSERT INTO post (POST) VALUES ($1);
+INSERT INTO post (UUID, POST) VALUES ($1, $2);

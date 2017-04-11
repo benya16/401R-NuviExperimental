@@ -26,7 +26,7 @@ func main() {
 	var elapsed time.Duration
 	for _,Post := range Dist.Posts {
 		data, _ := json.Marshal(Post)
-		db.AddPost(data)
+		db.AddRawPost(data)
 		//fmt.Println(Post.ToString())
 		//if filter.ContainsDangerWord(Post.RawText) {
 		//	data, _ := json.Marshal(Post)

@@ -1,6 +1,9 @@
 package filter
 
-import "strings"
+import (
+	"strings"
+	"fmt"
+)
 
 type Link struct {
 	value rune
@@ -15,10 +18,6 @@ type Trie struct {
 
 }
 
-
-
-
-
 func findRuneLink(links []Link, value rune) (*Trie, bool) {		//this is the original way we sorted through tries.  Does not work for multiple words
 
 
@@ -29,10 +28,6 @@ func findRuneLink(links []Link, value rune) (*Trie, bool) {		//this is the origi
 	}
 	return nil, false
 }
-
-
-
-
 
 func (r *Trie) findRuneInSentance(links []Link, value rune) (*Trie, bool) {		//this is try 2, works for sentances
 
@@ -51,11 +46,7 @@ func (r *Trie) findRuneInSentance(links []Link, value rune) (*Trie, bool) {		//t
 
 	//otherwise, if there is nowhere else we can go to, then say we can't go anywhere
 	return nil, false
-
 }
-
-
-
 
 //this was the default way to add a word.
 func (r *Trie) ExistsOrAdd(s string) bool {
@@ -107,12 +98,6 @@ func (words *WordSet) Contains(s string) bool {
 	return false
 }
 
-
-
-
-
-
-
 //USE THIS FUNCTION WHEN USING THE TRIE TO FIND DANGEROUS WORDS
 func (r *Trie) AddWordWIthDerivation(s string, exception bool) bool {
 
@@ -128,21 +113,7 @@ func (r *Trie) AddWordWIthDerivation(s string, exception bool) bool {
 	}
 
 	return false
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 //returns true if the word was added, false if word was already added
 func (r *Trie) addWord(s string, exception bool) bool {
@@ -165,15 +136,9 @@ func (r *Trie) addWord(s string, exception bool) bool {
 	return false
 }
 
-
-
-
-
-
 func NewTrie() *Trie {
 	return &Trie{stringEnd: true, childNodes: make([]Link, 0)}
 }
-
 
 //can only take one word at a time
 func (r *Trie) isDangerous(s string) bool  {
@@ -195,23 +160,14 @@ func (r *Trie) isDangerous(s string) bool  {
 	return false;
 }
 
-
 //takes a whole sentance.
-func (r *Trie) isDangerousSentance(sentance string) WordSet {
-
+func (r *Trie) isDangerousSentance(sentance string) *WordSet {
 	sentance = strings.ToLower(sentance)
-
 	var s = sentance + " "
-
 	if(len(s) > 25000) {
-		return *NewWordSet()
+		return NewWordSet()
 	}
-
-
-
 	set := NewWordSet()
-
-
 	var foundWordEnd = false
 	var foundWord = ""
 
@@ -224,7 +180,7 @@ func (r *Trie) isDangerousSentance(sentance string) WordSet {
 			foundWord = ""
 			if(ti.stringEnd) {
 				if(ti.exception) {
-					return *NewWordSet()
+					return NewWordSet()
 				}
 				foundWordEnd = true
 				foundWord = ti.word
@@ -234,6 +190,7 @@ func (r *Trie) isDangerousSentance(sentance string) WordSet {
 			//check for terminal character
 			if(foundWordEnd && symbolValue == ' ') {
 				set.Add(foundWord)
+				fmt.Println("Matched on word: " + foundWord)
 			}
 			i = r
 			foundWordEnd = false
@@ -241,27 +198,18 @@ func (r *Trie) isDangerousSentance(sentance string) WordSet {
 		}
 	}
 
-
-	return *set
+	return set
 }
-
-
-
-
-
 
 type TrieNumeric struct {
 	childNodes []NumericLink
 	repetitionsOfWord int
 }
 
-
 type NumericLink struct {
 	value rune
 	link *TrieNumeric
 }
-
-
 
 func findNumericRuneLink(links []NumericLink, value rune) (*TrieNumeric, bool) {
 
@@ -273,7 +221,6 @@ func findNumericRuneLink(links []NumericLink, value rune) (*TrieNumeric, bool) {
 	}
 	return nil, false
 }
-
 
 //PUT IN SINGLE, SANITIZED WORDS (no punctuation or spaces) still in progress
 func (r *TrieNumeric) addWord(s string) int {
@@ -297,19 +244,6 @@ func (r *TrieNumeric) addWord(s string) int {
 	return i.repetitionsOfWord
 }
 
-
-
 func NewNumericTrie() *TrieNumeric {
 	return &TrieNumeric{childNodes: make([]NumericLink, 0)}
 }
-
-
-
-
-
-
-
-
-
-
-

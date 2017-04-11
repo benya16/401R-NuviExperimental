@@ -8,7 +8,7 @@ import (
 	"../pgdatabase"
 	"../models"
 	"encoding/json"
-	"crypto/rand"
+	"github.com/satori/go.uuid"
 )
 
 func failOnError(err error, msg string) {
@@ -70,10 +70,11 @@ func StartRabbit() {
 			var post models.Post
 			json.Unmarshal(d.Body, &post)
 			if twitterFilter.ContainsDangerWord(post.Raw_body_text) {
-				db.AddRawPost(d.Body)
+				id := generateUUID()
+				db.AddRawPost(id, d.Body)
 				processed := filter.Preprocess(&post)
 				//fmt.Println(processed)
-				db.AddProcessedPost(processed)
+				db.AddProcessedPost(id, processed)
 				fmt.Println("Threat Logged")
 			}
 		}
@@ -84,8 +85,5 @@ func StartRabbit() {
 }
 
 func generateUUID() string {
-	bytes := make([]byte, 32)
-	rand.Read(bytes)
-
-	return string(bytes)
+	return uuid.NewV4().String()
 }

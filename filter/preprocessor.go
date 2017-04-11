@@ -1,6 +1,9 @@
 package filter
 
-import "../models"
+import (
+	"../models"
+	"fmt"
+)
 
 func Preprocess(post *models.Post) *models.ProcessedPost {
 	processed := new(models.ProcessedPost)
@@ -24,6 +27,7 @@ func Preprocess(post *models.Post) *models.ProcessedPost {
 	//take the raw body text, run it through the filter
 
 	dangerWords := Dictionary.isDangerousSentance(post.Cleaned_body_text)
+	fmt.Println(dangerWords)
 
 	processed.Shooter = dangerWords.Contains("shooter")
 	processed.ActiveShooter = dangerWords.Contains("active shooter")
