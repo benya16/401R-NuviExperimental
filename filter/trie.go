@@ -104,11 +104,11 @@ func (r *Trie) AddWordWIthDerivation(s string, exception bool) bool {
 
 	//add in generator to add in all of the words with punctuation
 
-	if r.addWord(s, exception) {
-		r.addWord(s + "!", exception)
-		r.addWord(s + ".", exception)
-		r.addWord(s + ",", exception)
-		r.addWord(s + "?", exception)
+	if r.addWord(s, exception, s) {
+		r.addWord(s + "!", exception, s)
+		r.addWord(s + ".", exception,s)
+		r.addWord(s + ",", exception, s)
+		r.addWord(s + "?", exception, s)
 		return true
 	}
 
@@ -116,7 +116,7 @@ func (r *Trie) AddWordWIthDerivation(s string, exception bool) bool {
 }
 
 //returns true if the word was added, false if word was already added
-func (r *Trie) addWord(s string, exception bool) bool {
+func (r *Trie) addWord(s string, exception bool, sWithoutPunctuation string) bool {
 	i := r
 	for _, symbolValue := range s {
 		ti, ok := findRuneLink(i.childNodes,symbolValue)
@@ -130,7 +130,7 @@ func (r *Trie) addWord(s string, exception bool) bool {
 	if !i.stringEnd {
 		i.stringEnd = true
 		i.exception = exception
-		i.word = s
+		i.word = sWithoutPunctuation
 		return true
 	}
 	return false

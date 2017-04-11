@@ -67,6 +67,7 @@ func (d* Filter) ContainsDangerWord(bodyText string) bool {
 	if(returnVar.size == 0) {
 		return false
 	}
+	fmt.Println(returnVar)
 
 	return true
 }
@@ -101,9 +102,8 @@ func (d* Filter) Preprocess(post *models.Post) *models.ProcessedPost {
 
 	//take the raw body text, run it through the filter
 
-	dangerWords := d.dictionary.isDangerousSentance(post.Cleaned_body_text)
-	fmt.Println(dangerWords)
-	fmt.Println(dangerWords.size)
+
+	dangerWords := d.dictionary.isDangerousSentance(post.Raw_body_text)
 
 	processed.Shooter = dangerWords.Contains("shooter")
 	processed.ActiveShooter = dangerWords.Contains("active shooter")
