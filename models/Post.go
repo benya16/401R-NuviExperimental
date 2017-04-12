@@ -69,20 +69,20 @@ type ProcessedPost struct {
 	IsRetweet         bool
 	KloutScore        uint
 	ExclaimationCount uint
-	Shooting	bool
-	Shooter		bool
 	ActiveShooter	bool
-	Gunman		bool
-	Warning		bool
-	Danger		bool
-	Breaking	bool
-	BombThreat	bool
-	Killing		bool
-	Dead		bool
-	Stabbing	bool
 	Attack		bool
 	Attacker	bool
-	Terrorist	bool
+	Breaking	bool
 	Bomb		bool
+	BombThreat	bool
+	Danger		bool
+	Dead		bool
+	Gunman		bool
+	Killing		bool
 	Rape		bool
+	Shooting	bool
+	Shooter		bool
+	Stabbing	bool
+	Terrorist	bool
+	Warning		bool
 }

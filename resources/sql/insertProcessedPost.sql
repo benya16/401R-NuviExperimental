@@ -1,2 +1,3 @@
-INSERT INTO processed_post (UUID, post_length, like_count, followers_count, friend_count, hashtag_count, retweet_count, is_retweet, klout_score, exclaimation_count)
-values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+INSERT INTO processed_post (UUID, post_length, like_count, followers_count, friend_count, hashtag_count, retweet_count, is_retweet, klout_score, exclaimation_count,
+                            active_shooter, attack, attacker, bomb, bomb_threat, breaking, danger, dead, gunman, killing, rape, shooter, shooting, stabbing, terrorist, warning)
+values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26);

@@ -5,18 +5,18 @@ import (
 	"strings"
 	//"regexp"
 	"regexp"
-	"fmt"
 	"../models"
 )
 
 var dangerDictionary []string
 
-var regex *regexp.Regexp
+//var regex *regexp.Regexp
 
 //var Dictionary *Trie
 
 type Filter struct {
 	dictionary *Trie
+	regex *regexp.Regexp
 }
 
 func (d* Filter) InitFilter(dictionaryFileName string) {
@@ -67,7 +67,6 @@ func (d* Filter) ContainsDangerWord(bodyText string) bool {
 	if(returnVar.size == 0) {
 		return false
 	}
-	fmt.Println(returnVar)
 
 	return true
 }

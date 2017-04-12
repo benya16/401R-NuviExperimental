@@ -33,5 +33,6 @@ create table processed_post
   shooting BOOLEAN DEFAULT FALSE,
   stabbing BOOLEAN DEFAULT FALSE,
   terrorist BOOLEAN DEFAULT FALSE,
-  warning BOOLEAN DEFAULT FALSE
+  warning BOOLEAN DEFAULT FALSE,
+  class_threat BOOLEAN
 );
