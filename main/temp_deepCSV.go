@@ -3,8 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"os"
-	"../pgdatabase"
+	//"os"
+	//"../pgdatabase"
 	"../filter"
 	"../models"
 	"encoding/json"
@@ -15,22 +15,22 @@ import (
 func main() {
 	//nuvi, err := sql.Open("postgres", "postgres://go:gogo2017@localhost/nuvisocialthreat?sslmode=disable")
 	//SqlError(err, "Error connecting to socialthreat")
-	dao := pgdatabase.NewDAO()
-	dao.Test()
+	//dao := pgdatabase.NewDAO()
 	twitterFilter := new(filter.Filter)
 	twitterFilter.InitFilter("danger.csv")
-	manual, err := sql.Open("postgres", "postgres://go:gogo2017@localhost/manualthreats?sslmode=disable")
-	SqlError(err, "Error connecting to socialthreat")
+	manual, _ := sql.Open("postgres", "postgres://go:gogo2017@localhost/manualthreats?sslmode=disable")
+	//SqlError(err, "Error connecting to socialthreat")
 
-	rows, err := manual.Query("select uuid, threat, post from post")
+	rows, _ := manual.Query("select uuid, threat, post from post")
+	//SqlError(err, "Error during query")
 	var id string
 	var threat bool
 	var storedPost []byte
 	var post models.Post
-	var body = "@relation deepTwitterData\n\n@attribute content string\n@attribute Class {false, true}\n\n@data\n"
+	var body = ""
 	for rows.Next() {
-		err := rows.Scan(&id, &threat, &storedPost)
-		SqlError(err, "Error Scanning result set")
+		rows.Scan(&id, &threat, &storedPost)
+		//SqlError(err, "Error Scanning result set")
 
 		json.Unmarshal(storedPost, &post)
 		var threatString string
@@ -39,9 +39,7 @@ func main() {
 		} else {
 			threatString = "'false'"
 		}
-		var line = "'" + strings.Replace(strings.Replace(post.Raw_body_text, "\n", " ", -1), "'", "", -1) + "'," + threatString + "\n"
-		fmt.Print(line)
-		body = body + line
+		body = body + "'" + strings.Replace(strings.Replace(post.Raw_body_text,"\n", " ", -1), "'", "", -1) + "'," + threatString + "\n"
 		//dao.AddRawPost(id, storedPost)
 		//processed := twitterFilter.Preprocess(&post)
 		//dao.AddProcessedPost(id, processed)
@@ -55,9 +53,9 @@ func main() {
 	fmt.Println("Complete")
 }
 
-func SqlError(err error, message string) {
-	if err != nil {
-		fmt.Println("SQL Error: ", message, "-> ", err.Error())
-		os.Exit(1)
-	}
-}
+//func SqlError(err error, message string) {
+//	if err != nil {
+//		fmt.Println("SQL Error: ", message, "-> ", err.Error())
+//		os.Exit(1)
+//	}
+//}
