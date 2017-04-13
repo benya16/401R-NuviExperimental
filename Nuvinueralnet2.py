@@ -43,7 +43,7 @@ model_path = "C:/Users/Greg/Anaconda3/envs/tensorflow/Scripts/model.ckpt"
    
 
 # Network Parameters
-n_input = batch_size #  dta input (img shape: 28*28)
+n_input = batch_size #  dta input (img shape: 1*10)
 n_classes = 2 # total classes (0-1 digits)
 dropout = 0.75 # Dropout, probability to keep units
 hidden = .5
