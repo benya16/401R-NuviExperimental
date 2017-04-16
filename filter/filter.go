@@ -6,6 +6,7 @@ import (
 	//"regexp"
 	"regexp"
 	"../models"
+	"fmt"
 )
 
 var dangerDictionary []string
@@ -36,14 +37,14 @@ func (d* Filter) InitFilter(dictionaryFileName string) {
 		d.dictionary.AddWordWIthDerivation(dangerDictionary[i], false)
 	}
 
-	//regexString := "(?i)"
-	//for i := 0; i < len(dangerDictionary); i++ {
-	//	if i > 0 {
-	//		regexString += "|"
-	//	}
-	//	regexString += dangerDictionary[i]
-	//}
-	//regex = regexp.MustCompile(regexString)
+	regexString := "(?i)"
+	for i := 0; i < len(dangerDictionary); i++ {
+		if i > 0 {
+			regexString += "|"
+		}
+		regexString += dangerDictionary[i]
+	}
+	d.regex = regexp.MustCompile(regexString)
 
 }
 
@@ -57,18 +58,18 @@ func (d* Filter) InitExceptions(dictionaryFileName string) {
 }
 
 func (d* Filter) ContainsDangerWord(bodyText string) bool {
-	//result := regex.FindAllString(bodyText, -1)
-	//if len(result) > 0 {
-	//	fmt.Println(result)
-	//	return true
-	//}
-	//return false
-	returnVar := d.dictionary.isDangerousSentance(bodyText)
-	if(returnVar.size == 0) {
-		return false
+	result := d.regex.FindAllString(bodyText, -1)
+	if len(result) > 0 {
+		fmt.Println(result)
+		return true
 	}
-
-	return true
+	return false
+	//returnVar := d.dictionary.isDangerousSentance(bodyText)
+	//if(returnVar.size == 0) {
+	//	return false
+	//}
+	//
+	//return true
 }
 
 //func (d* Filter) GetMatchedWords(bodyText string) []string {

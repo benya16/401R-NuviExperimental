@@ -11,7 +11,7 @@ type Connection struct {
 }
 
 func (c *Connection) Connect() {
-	db, err := sql.Open("postgres", "postgres://go:gogo2017@localhost/nuvisocialthreat?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://go:gogo2017@localhost/third?sslmode=disable")
 	sqlError(err, "Error at Connect()")
 	c.database = db
 }
